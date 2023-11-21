@@ -6,7 +6,7 @@ import cors from "cors";
 
 const app = express()
 app.use(cors())
-const port = 3000
+//const port = 3000
 app.get('/', (req, res) => {
   res.send('Backend!')
 })
@@ -17,6 +17,6 @@ app.use("/movies", movies);
 app.use("/users", users);
 
 app.use("/comments", comments);
-app.listen(port, () => {
-  console.log(`backend listening on port ${port}`)
+app.listen( () => {
+  console.log(`backend listening `)
 })
