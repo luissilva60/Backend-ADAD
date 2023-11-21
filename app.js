@@ -17,3 +17,5 @@ app.use("/movies", movies);
 app.use("/users", users);
 
 app.use("/comments", comments);
+
+app.listen(process.env.PORT || 3000)
