@@ -17,6 +17,3 @@ app.use("/movies", movies);
 app.use("/users", users);
 
 app.use("/comments", comments);
-app.listen( () => {
-  console.log(`backend listening `)
-})
