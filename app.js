@@ -1,6 +1,7 @@
 import express from "express";
 import movies from "./routes/movies.js";
 import users from "./routes/users.js";
+import cinemas from "./routes/cinemas.js";
 import comments from "./routes/comments.js";
 import cors from "cors";
 
@@ -15,7 +16,10 @@ app.use(express.json())
 app.use("/movies", movies);
 // Load the /users routes
 app.use("/users", users);
+app.use("/cinemas", cinemas)
 
 app.use("/comments", comments);
+
+
 
 app.listen(process.env.PORT || 3000)
