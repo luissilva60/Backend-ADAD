@@ -118,6 +118,32 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Route to verify JWT token and return user details
+router.post('/verify-token', async (req, res) => {
+    try {
+        const token = req.body.token;
+
+        if (!token) {
+            return res.status(400).json({ message: 'Token is missing in the request body.' });
+        }
+
+        const decoded = jwt.verify(token, 'wcGBBhaRBJnuWRw');
+        const userId = decoded.sessionKey;
+
+        // Assuming you have a MongoDB collection named 'movielens_users'
+        const user = await db.collection('movielens_users').findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(404).json({ isValid: false, message: 'User not found.' });
+        }
+
+        res.status(200).json({ isValid: true, user });
+    } catch (err) {
+        console.log(err);
+        res.status(401).json({ isValid: false, message: 'Invalid token.' });
+    }
+});
+
 
 router.put("/updatePasswords", verifyJwt, async (req, res) => {
     try {
