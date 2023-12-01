@@ -120,23 +120,36 @@ router.post('/login', async (req, res) => {
 
 // Route to verify JWT token and return user details
 router.post('/verify-token', async (req, res) => {
+
     try {
         const token = req.body.token;
+        console.log(token)
+        console.log(token)
 
         if (!token) {
             return res.status(400).json({ message: 'Token is missing in the request body.' });
         }
+        if (token.length < 20) {
+            console.log("invalid token size:2", token.length);
+            return res.status(500).json({ message: 'Invalid token size.' });
+        }
 
         const decoded = jwt.verify(token, 'wcGBBhaRBJnuWRw');
-        const userId = decoded.sessionKey;
+        const userId = parseInt(decoded.sessionKey);
+
+        // Log the decoded token and userId for debugging
+        console.log('Decoded Token:', decoded);
+        console.log('User ID from Token:', userId);
 
         // Assuming you have a MongoDB collection named 'movielens_users'
         const user = await db.collection('movielens_users').findOne({ _id: userId });
 
         if (!user) {
+            // Log the userId when the user is not found for debugging
+            console.log('User not found for ID:', userId);
             return res.status(404).json({ isValid: false, message: 'User not found.' });
         }
-
+        console.log(user)
         res.status(200).json({ isValid: true, user });
     } catch (err) {
         console.log(err);
