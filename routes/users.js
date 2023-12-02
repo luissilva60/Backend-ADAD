@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 });
 
 // Pesquisa o utilizador por id
-router.get("/:id", async (req, res) => { 
+router.get("/:id", async (req, res) => {
     let userId;
 
     if (req.params.id.length === 24) {
@@ -41,9 +41,14 @@ router.get("/:id", async (req, res) => {
             { $unwind: "$movies" },
             { $sort: { "movies.rating": -1 } },
             { $limit: 5 },
+            { $lookup: {
+                    from: "movielens_movies",
+                    localField: "movies.movieid",
+                    foreignField: "_id",
+                    as: "movies.movieDetails"
+                }},
             { $group: { _id: "$_id", name: { $first: "$name" }, gender: { $first: "$gender" }, email: { $first: "$email" }, password: { $first: "$password" }, age: { $first: "$age" }, occupation: { $first: "$occupation" }, movies: { $push: "$movies" } } }
         ]).toArray();
-
         if (user.length === 0) {
             return res.status(404).json({ error: "User not found" });
         }
