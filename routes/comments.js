@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
         const comment = req.body;
 
         // Insert the new movie document into the "movies" collection
-        const result = await db.collection('comments').insertMany(comment);
+        const result = await db.collection('comments').insertOne(comment);
         res.send(result)
     } catch (error) {
         console.log(error);
