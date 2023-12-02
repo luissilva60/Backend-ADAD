@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Apaga um utilizador por id 
-router.delete("/:id", verifyJwt, async (req, res) => {
+router.delete("/:id", async (req, res) => {
     let userId;
 
     if (req.params.id.length === 24) {
