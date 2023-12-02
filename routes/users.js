@@ -147,7 +147,17 @@ router.post('/verify-token', async (req, res) => {
         console.log('User ID from Token:', userId);
 
         // Assuming you have a MongoDB collection named 'movielens_users'
-        const user = await db.collection('movielens_users').findOne({ _id: userId });
+        const user = await db.collection('movielens_users').aggregate([
+            { $match: { _id: userId } },
+            { $unwind: "$movies" },
+            { $lookup: {
+                    from: "movielens_movies",
+                    localField: "movies.movieid",
+                    foreignField: "_id",
+                    as: "movies.movieDetails"
+                }},
+            { $group: { _id: "$_id", name: { $first: "$name" }, gender: { $first: "$gender" }, email: { $first: "$email" }, password: { $first: "$password" }, age: { $first: "$age" }, occupation: { $first: "$occupation" }, movies: { $push: "$movies" } } }
+        ]).toArray();
 
         if (!user) {
             // Log the userId when the user is not found for debugging
