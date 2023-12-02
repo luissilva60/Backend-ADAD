@@ -102,6 +102,35 @@ router.put("/:id", async (req, res) => {
     }
 });
 
+
+router.post('/addTransactionId/:id', async (req, res) => {
+    let movieId;
+
+    if (req.params.id.length === 24) {
+        movieId = new ObjectId(req.params.id);
+    } else {
+        movieId = parseInt(req.params.id);
+    }
+
+    const { txId } = req.body;
+
+    try {
+        const movie = await db.collection("movielens_movies").updateOne(
+            { _id: movieId },
+            { $set: { txId: txId } }
+        );
+
+        if (movie.matchedCount === 0) {
+            return res.status(404).json({ error: "Movie not found" });
+        }
+
+        res.status(200).json({ message: "Transaction ID added to the movie" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 router.get("/higher/:num_movies", async (req, res) => {
     try {
         const num_movies = parseInt(req.params.num_movies);
